@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Automatic_data_parser.Model
 {
-    class MiniThreatInfoModel
+    public class AbbreviatedThreatInfoModel
     {
         public int ThreatID { get; set; }
         public string ThreatName { get; set; }
 
-        public MiniThreatInfoModel(int threatID, string threatName)
+        public AbbreviatedThreatInfoModel(int threatID, string threatName)
         {
             ThreatID = threatID;
             ThreatName = threatName;

@@ -9,9 +9,17 @@ using System.Threading.Tasks;
 
 namespace Automatic_data_parser.Model
 {
-    public class DataGridPagging : INotifyPropertyChanged
+    public class DataGridComponent : INotifyPropertyChanged
     {
+        //Abbreviated view 
+        public bool IsAbbreviated { get; set; }
+
+        //Pagination fields
+        private static DataGridComponent dataGridPaggingInstance;
         private int positionsOnPageCount = 15;
+        private int pagesCount;
+        private int currentPage;
+
         public int PositionsCount { get; private set; }
         public int PositionsOnPageCount
         {
@@ -28,7 +36,6 @@ namespace Automatic_data_parser.Model
                 }
             }
         }
-        private int pagesCount;
         public int PagesCount
         {
             get
@@ -41,7 +48,6 @@ namespace Automatic_data_parser.Model
                 OnPropertyChanged();
             }
         }
-        private int currentPage;
         public int CurrentPage
         {
             get
@@ -62,6 +68,9 @@ namespace Automatic_data_parser.Model
                 }
             }
         }
+        public ObservableCollection<ThreatInfoModel>[] ThreatInfoByPages { get; private set; }
+
+        //Local data fields
         private ObservableCollection<ThreatInfoModel> threatInfoData;
         public ObservableCollection<ThreatInfoModel> ThreatInfoData
         {
@@ -85,34 +94,56 @@ namespace Automatic_data_parser.Model
                     }
                     CurrentPage = 1;
                     SeparatePositionsByPages();
-
-                    OnPropertyChanged();
                 }
                 else threatInfoData = new ObservableCollection<ThreatInfoModel>();
+                OnPropertyChanged();
             }
         }
-        public ObservableCollection<ThreatInfoModel>[] ThreatInfoByPages { get; private set; }
 
+        //INotifyPropertyChanged fields
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public DataGridPagging(ObservableCollection<ThreatInfoModel> threatInfoModels)
-        {
-            ThreatInfoData = threatInfoModels ?? new ObservableCollection<ThreatInfoModel>();
-        }
-
         private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        //Singleton implementation
+        private DataGridComponent(ObservableCollection<ThreatInfoModel> threatInfoModels)
+        {
+            ThreatInfoData = threatInfoModels ?? new ObservableCollection<ThreatInfoModel>();
+        }
+
+        public static DataGridComponent GetInstance(ObservableCollection<ThreatInfoModel> threatInfoModels)
+        {
+            if (dataGridPaggingInstance == null)
+            {
+                dataGridPaggingInstance = new DataGridComponent(threatInfoModels);
+            }
+            return dataGridPaggingInstance;
+        }
+
+        //Component methods
+        private ObservableCollection<AbbreviatedThreatInfoModel> ConvertToAbbreviatedVersion(
+            ObservableCollection<ThreatInfoModel> fullThreatInfo)
+        {
+            ObservableCollection<AbbreviatedThreatInfoModel> abbreviatedThreatInfo = new ObservableCollection<AbbreviatedThreatInfoModel>();
+
+            foreach (var threatInfo in fullThreatInfo)
+            {
+                abbreviatedThreatInfo.Add(new AbbreviatedThreatInfoModel(threatInfo.ThreatID, threatInfo.ThreatName));
+            }
+
+            return abbreviatedThreatInfo;
+        }
+
         private void SeparatePositionsByPages()
         {
-            ThreatInfoByPages = new ObservableCollection<ThreatInfoModel>[pagesCount];
+            ThreatInfoByPages = new ObservableCollection<ThreatInfoModel>[PagesCount];
 
-            for (int localCurrentPage = 0; localCurrentPage < pagesCount; localCurrentPage++)
+            for (int localCurrentPage = 0; localCurrentPage < PagesCount; localCurrentPage++)
             {
                 ThreatInfoByPages[localCurrentPage] = new ObservableCollection<ThreatInfoModel>();
-                int positionsOnCurrentPageCount = 0;
+                int positionsOnCurrentPageCount;
                 int startIndex = PositionsOnPageCount * (localCurrentPage);
                 // If count of remaining position >= count of position on page, then we put on page all required positions
                 if ((PositionsCount - (PositionsOnPageCount * (localCurrentPage))) / PositionsOnPageCount > 0)
@@ -136,11 +167,16 @@ namespace Automatic_data_parser.Model
 
         public ObservableCollection<ThreatInfoModel> PositionsOnCurrentPage()
         {
-            if (ThreatInfoData.Count == 0) return ThreatInfoData;
+            if (ThreatInfoData.Count == 0) return null;
             else
-            {
                 return ThreatInfoByPages[CurrentPage - 1];
-            }
+        }
+
+        public ObservableCollection<AbbreviatedThreatInfoModel> AbbreviatedPositionsOnCurrentPage()
+        {
+            if (ThreatInfoData.Count == 0) return null;
+            else
+                return ConvertToAbbreviatedVersion(ThreatInfoByPages[CurrentPage - 1]);
         }
     }
 }
