@@ -34,14 +34,46 @@ namespace Automatic_data_parser
 
         public MainWindow()
         {
-            ObservableCollection<ThreatInfoModel> observableThreatData =
-                new ObservableCollection<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(Utils.GetExcelFromFile(LOCAL_DATA_FILE_NAME)));
+            ExcelQueryFactory excelQueryFactory = null;
+            bool IsCorrectStart = true;
 
-            dataGridComponent = DataGridComponent.GetInstance(observableThreatData);
-            InitializeComponent();
-            DataContext = dataGridComponent;
+            try
+            {
+                excelQueryFactory = Utils.GetExcelFromFile(LOCAL_DATA_FILE_NAME);
+            }
+            catch (Exception exc)
+            {
+                if (MessageBox.Show(
+                    $"Could not get the file from the system.\n" +
+                    $"Reason: {exc.Message}\n\n" +
+                    $"Choosing \"yes\" will try to download excel file from FSTEC\n\n" +
+                    $"Choosing \"no\" will close the program", "Question", 
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Utils.DownloadExcelFromWebsiteToDirectory(URL, LOCAL_DATA_FILE_NAME);
+                    excelQueryFactory = Utils.GetExcelFromFile(LOCAL_DATA_FILE_NAME);
+                }
+                else
+                {
+                    //Closing main window
+                    Close();
+                    IsCorrectStart = false;
+                }
+            }
 
-            MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
+            if (IsCorrectStart)
+            {
+                var observableThreatData =
+                    new ObservableCollection<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(excelQueryFactory));
+
+                dataGridComponent = DataGridComponent.GetInstance(observableThreatData);
+                InitializeComponent();
+                ChoosedShowMode_CheckBox.IsChecked = true;
+
+                DataContext = dataGridComponent;
+
+                MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
+            }
         }
 
         private void UpdateData_Button_Click(object sender, RoutedEventArgs e)
@@ -68,9 +100,9 @@ namespace Automatic_data_parser
             if (dataGridComponent.CurrentPage == 1) return;
             dataGridComponent.CurrentPage = 1;
 
-            if (!dataGridComponent.IsAbbreviated) 
+            if (!dataGridComponent.IsAbbreviated)
                 MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
-            else 
+            else
                 MainDataGrid.ItemsSource = dataGridComponent.AbbreviatedPositionsOnCurrentPage();
         }
 
@@ -79,9 +111,9 @@ namespace Automatic_data_parser
             if (dataGridComponent.CurrentPage == dataGridComponent.PagesCount) return;
             dataGridComponent.CurrentPage = dataGridComponent.PagesCount;
 
-            if (!dataGridComponent.IsAbbreviated) 
+            if (!dataGridComponent.IsAbbreviated)
                 MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
-            else 
+            else
                 MainDataGrid.ItemsSource = dataGridComponent.AbbreviatedPositionsOnCurrentPage();
         }
 
@@ -92,7 +124,7 @@ namespace Automatic_data_parser
 
             if (numberOfPageBeforeClick != dataGridComponent.CurrentPage)
             {
-                if (!dataGridComponent.IsAbbreviated) 
+                if (!dataGridComponent.IsAbbreviated)
                     MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
                 else
                     MainDataGrid.ItemsSource = dataGridComponent.AbbreviatedPositionsOnCurrentPage();

@@ -35,8 +35,7 @@
                 <Button Name ="LastPage_Button" Content="&gt;&gt;" Width = "25" Margin = "5, 10" ToolTip="Last page" Click="LastPage_Button_Click"/>
             </StackPanel>
             <Button x:Name ="UpdateData_Button" Content="Update data" Margin="10,4,0,0" Click="UpdateData_Button_Click" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="203" RenderTransformOrigin="0.64,0.76" FontSize="24" Grid.Row="3"/>
-            <CheckBox Name ="ChoosedShowMode_CheckBox" IsChecked="True" Content="Show full info mode" HorizontalAlignment="Left" Margin="24,12,0,0" VerticalAlignment="Top" FontSize="16" Height="23" Width="178" Grid.Row="2" Checked="ChoosedShowMode_CheckBox_Checked" Unchecked="ChoosedShowMode_CheckBox_Unchecked" />
+            <CheckBox Name ="ChoosedShowMode_CheckBox" Content="Show full info mode" HorizontalAlignment="Left" Margin="24,12,0,0" VerticalAlignment="Top" FontSize="16" Height="23" Width="178" Grid.Row="2" Checked="ChoosedShowMode_CheckBox_Checked" Unchecked="ChoosedShowMode_CheckBox_Unchecked" />
         </Grid>
-
     </Grid>
 </Window>
