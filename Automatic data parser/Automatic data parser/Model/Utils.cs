@@ -1,6 +1,7 @@
 ﻿using LinqToExcel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -10,7 +11,12 @@ namespace Automatic_data_parser.Model
 {
     public static class Utils
     {
-        public static ThreatInfoModel GetInfoFromRow(LinqToExcel.Row row)
+        /// <summary>
+        /// Take the row from excel and parse information from it
+        /// </summary>
+        /// <param name="row">Specified row to parse</param>
+        /// <returns>Parsed information from row as ThreatInfoModel</returns>
+        public static ThreatInfoModel ParseInfoFromRow(LinqToExcel.Row row)
         {
             int threatID = Int32.Parse(Convert.ToString(row[0].Value));
             string threatName = Convert.ToString(row[1].Value);
@@ -47,8 +53,19 @@ namespace Automatic_data_parser.Model
             throw new NotImplementedException();
         }
 
-        public static ExcelQueryFactory GetExcelFromFile(string filePath) => new ExcelQueryFactory(filePath);
+        public static ExcelQueryFactory GetExcelFromFile(string filePath)
+        {            
+            if (filePath.Length == 0) throw new ArgumentException("File path should not be empty!");
+            else if (filePath is null) throw new ArgumentNullException("File path should not be null!");            
+            else if (!File.Exists(filePath)) throw new FileNotFoundException("Could not find the file in the specified directory!");
+            return new ExcelQueryFactory(filePath);
+        }
 
+        /// <summary>
+        /// Take the excel file and parse information from it
+        /// </summary>
+        /// <param name="excelFile">Specified excel file to parse</param>
+        /// <returns>Parsed information from excel file as list of ThreatInfoModel</returns>
         public static List<ThreatInfoModel> ParseExcelToThreatInfo(ExcelQueryFactory excelFile)
         {
             int rowCount = excelFile.Worksheet("Sheet").Count();
@@ -57,12 +74,17 @@ namespace Automatic_data_parser.Model
 
             foreach (var row in data)
             {
-                threatData.Add(GetInfoFromRow(row));
+                threatData.Add(ParseInfoFromRow(row));
             }
 
             return threatData;
         }
 
+        /// <summary>
+        /// Downloads Excel from a specific website and saves it in the specified file directory
+        /// </summary>
+        /// <param name="url">Website URL</param>
+        /// <param name="fileName">Path to file directory</param>
         public static void DownloadExcelFromWebsiteToDirectory(string url, string fileName)
         {
             using (WebClient client = new WebClient())

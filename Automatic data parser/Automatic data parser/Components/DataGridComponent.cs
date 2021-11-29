@@ -11,16 +11,30 @@ namespace Automatic_data_parser.Model
 {
     public class DataGridComponent : INotifyPropertyChanged
     {
-        //Abbreviated view 
+        #region Abbreviated view 
+        /// <summary>
+        /// Show mode of data in DataGrid;
+        /// <para>True - show abbreviated data;</para>
+        /// <para>False - show full data</para>
+        /// </summary>
         public bool IsAbbreviated { get; set; }
+        #endregion
 
-        //Pagination fields
+        #region Pagination fields
         private static DataGridComponent dataGridPaggingInstance;
         private int positionsOnPageCount = 15;
         private int pagesCount;
         private int currentPage;
+        #endregion
 
+        #region Pagination properties
+        /// <summary>
+        /// Number of rows with data in excel file
+        /// </summary>
         public int PositionsCount { get; private set; }
+        /// <summary>
+        /// Number of rows on one page in datagrid
+        /// </summary>
         public int PositionsOnPageCount
         {
             get
@@ -36,6 +50,9 @@ namespace Automatic_data_parser.Model
                 }
             }
         }
+        /// <summary>
+        /// Summary number of pages in datagrid
+        /// </summary>
         public int PagesCount
         {
             get
@@ -48,6 +65,9 @@ namespace Automatic_data_parser.Model
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// Current page number
+        /// </summary>
         public int CurrentPage
         {
             get
@@ -68,10 +88,19 @@ namespace Automatic_data_parser.Model
                 }
             }
         }
+        /// <summary>
+        /// Paginated threat Information
+        /// <para>This is done to improve the performance of the program, </para>
+        /// <para>When page is switch, you get ready data from array of paginated data.</para>
+        /// </summary>
         public ObservableCollection<ThreatInfoModel>[] ThreatInfoByPages { get; private set; }
+        #endregion
 
-        //Local data fields
+        #region Fields with threat info
         private ObservableCollection<ThreatInfoModel> threatInfoData;
+        /// <summary>
+        /// Property which contain  all parsed data from excel
+        /// </summary>
         public ObservableCollection<ThreatInfoModel> ThreatInfoData
         {
             get
@@ -99,20 +128,28 @@ namespace Automatic_data_parser.Model
                 OnPropertyChanged();
             }
         }
+        #endregion
 
-        //INotifyPropertyChanged fields
+        #region INotifyPropertyChanged fields
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
 
-        //Singleton implementation
+        #region Singleton implementation
         private DataGridComponent(ObservableCollection<ThreatInfoModel> threatInfoModels)
         {
             ThreatInfoData = threatInfoModels ?? new ObservableCollection<ThreatInfoModel>();
         }
 
+        /// <summary>
+        /// Return instance of DataGridComponent
+        /// <para>If instance is null then will created</para>
+        /// </summary>
+        /// <param name="threatInfoModels">List of parsed data from excel</param>
+        /// <returns>The only created instance of the class</returns>
         public static DataGridComponent GetInstance(ObservableCollection<ThreatInfoModel> threatInfoModels)
         {
             if (dataGridPaggingInstance == null)
@@ -121,8 +158,9 @@ namespace Automatic_data_parser.Model
             }
             return dataGridPaggingInstance;
         }
+        #endregion
 
-        //Component methods
+        #region Component methods
         private ObservableCollection<AbbreviatedThreatInfoModel> ConvertToAbbreviatedVersion(
             ObservableCollection<ThreatInfoModel> fullThreatInfo)
         {
@@ -136,6 +174,7 @@ namespace Automatic_data_parser.Model
             return abbreviatedThreatInfo;
         }
 
+        // This method fill ThreatInfoByPages pages by pages
         private void SeparatePositionsByPages()
         {
             ThreatInfoByPages = new ObservableCollection<ThreatInfoModel>[PagesCount];
@@ -165,6 +204,8 @@ namespace Automatic_data_parser.Model
             }
         }
 
+        
+        /// <returns>Positions on current page in datagrid</returns>
         public ObservableCollection<ThreatInfoModel> PositionsOnCurrentPage()
         {
             if (ThreatInfoData.Count == 0) return null;
@@ -172,11 +213,13 @@ namespace Automatic_data_parser.Model
                 return ThreatInfoByPages[CurrentPage - 1];
         }
 
+        /// <returns>Abbreviated positions on current page in datagrid</returns>
         public ObservableCollection<AbbreviatedThreatInfoModel> AbbreviatedPositionsOnCurrentPage()
         {
             if (ThreatInfoData.Count == 0) return null;
             else
                 return ConvertToAbbreviatedVersion(ThreatInfoByPages[CurrentPage - 1]);
         }
+        #endregion
     }
 }
