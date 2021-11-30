@@ -1,5 +1,4 @@
 ﻿using Automatic_data_parser.Model;
-using ExcelDataReader;
 using LinqToExcel;
 using System;
 using System.Collections.Generic;
@@ -29,7 +28,7 @@ namespace Automatic_data_parser
     {
         private readonly string URL = "https://bdu.fstec.ru/files/documents/thrlist.xlsx";
         private readonly string LOADED_DATA_FILE_NAME = "DownloadedData.xlsx";
-        private readonly string LOCAL_DATA_FILE_NAME = "LocalData.xlsx";
+        private readonly string LOCAL_DATA_FILE_NAME = "Test_EmptyFile.xlsx";
         private readonly DataGridComponent dataGridComponent;
 
         public MainWindow()
@@ -46,8 +45,8 @@ namespace Automatic_data_parser
                 if (MessageBox.Show(
                     $"Could not get the file from the system.\n" +
                     $"Reason: {exc.Message}\n\n" +
-                    $"Choosing \"yes\" will try to download excel file from FSTEC\n\n" +
-                    $"Choosing \"no\" will close the program", "Question", 
+                    $"Choosing \"yes\" will try to download excel file \n\n" +
+                    $"Choosing \"no\" will close the program", "Question",
                     MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     Utils.DownloadExcelFromWebsiteToDirectory(URL, LOCAL_DATA_FILE_NAME);
@@ -55,7 +54,7 @@ namespace Automatic_data_parser
                 }
                 else
                 {
-                    //Closing main window
+                    //Close the main window if it was not possible to load the file with information about threats
                     Close();
                     IsCorrectStart = false;
                 }
@@ -63,21 +62,59 @@ namespace Automatic_data_parser
 
             if (IsCorrectStart)
             {
-                var observableThreatData =
-                    new ObservableCollection<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(excelQueryFactory));
+                ObservableCollection<ThreatInfoModel> observableThreatData = null;
+                try
+                {
+                    observableThreatData = new ObservableCollection<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(excelQueryFactory));
+                }
+                catch (ArgumentException exc)
+                {
+                    MessageBox.Show(exc.Message);
+                }
 
                 dataGridComponent = DataGridComponent.GetInstance(observableThreatData);
                 InitializeComponent();
                 ChoosedShowMode_CheckBox.IsChecked = true;
-
                 DataContext = dataGridComponent;
-
                 MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
             }
         }
 
         private void UpdateData_Button_Click(object sender, RoutedEventArgs e)
         {
+            /*string path = "TestText.dsadsa";
+            //if (!File.Exists(LOCAL_DATA_FILE_NAME))
+            if (!File.Exists("TestText.dsadsa"))
+            {
+                bool isFileExists = false;
+                do
+                {
+                    if (MessageBox.Show(
+                    $"Excel table was not found, would you like to try update again?\n\n" +
+                    $"Choosing \"yes\" this window will be displayed again if the file is not found\n\n" +
+                    $"Choosing \"no\" A new local file will be created copying the web version ", "Question",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+                        isFileExists = File.Exists(path);
+                        //EXcel
+                        //WorkBooks
+                    }
+                    else
+                    {
+                        //if no
+                    }
+                } while (true);
+            }
+
+            //while ()
+            //MSG box Во время сохранения информации не был найден локальный файл с эксель таблицей, хотите попробовать сохранить еще раз?
+            // Да - снова сообщение
+            // Нет - Будет создан новый локальный файл, в таком случае вы не увидите разницу между изменениями локального файла и актуальной версией
+
+            //TODOODODODOODDOODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+            //Добавить кейс, когда во время корректной работы программы пользователь переместил локальный эксель куда-нибудь из рабочей директории
+            //if файла нету, то известить об этом пользователя, мол тогда начнется загрузка файла и никаких изменений он не увидит
+
             try
             {
                 if (File.Exists(LOCAL_DATA_FILE_NAME))
@@ -92,7 +129,7 @@ namespace Automatic_data_parser
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
-            }
+            }*/
         }
 
         private void FirstPage_Button_Click(object sender, RoutedEventArgs e)
@@ -155,6 +192,11 @@ namespace Automatic_data_parser
         {
             dataGridComponent.IsAbbreviated = true;
             MainDataGrid.ItemsSource = dataGridComponent.AbbreviatedPositionsOnCurrentPage();
+        }
+
+        private void SaveData_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Utils.SaveDataGridDataToFile(dataGridComponent.ThreatInfoData, LOCAL_DATA_FILE_NAME);
         }
     }
 }
