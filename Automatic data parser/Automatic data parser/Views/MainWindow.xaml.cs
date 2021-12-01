@@ -145,7 +145,15 @@ namespace Automatic_data_parser
 
         private void SaveData_Button_Click(object sender, RoutedEventArgs e)
         {
-            Utils.SaveThreatDataToFile(dataGridComponent.ThreatInfoData, MainDataGrid.Columns.Count(), LOCAL_DATA_FILE_NAME);
+            try
+            {
+                Utils.SaveThreatDataToFile(dataGridComponent.ThreatInfoData, MainDataGrid.Columns.Count(), LOCAL_DATA_FILE_NAME);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Failed to save the file!\n" +
+                    $"Cause: {exc.Message}");
+            }
         }
 
         private void SyncData_Button_Click(object sender, RoutedEventArgs e)
@@ -166,26 +174,44 @@ namespace Automatic_data_parser
 
             Utils.GetDifferenceRows(localThreatData, loadedThreatData, out IList<ThreatInfoModel> localDifferenceRows, out IList<ThreatInfoModel> loadedDifferenceRows);
 
-            if (MessageBox.Show(
-                    $"Number of distinct lines: {localDifferenceRows.Count()}\n" +
-                    $"Do you want to see the difference ?\n" +
-                    $"\"Yes\" - Open a window with differences\n" +
-                    $"\"No\" - Continue without opening the window with differences",
-                    "Question",
-                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (localDifferenceRows.Count() == 0)
             {
-                DifferenceWindow differenceWindow = new DifferenceWindow(localDifferenceRows, loadedDifferenceRows) { Owner = this };
-                differenceWindow.ShowDialog();
+                MessageBox.Show("No differences were found between the local and the current version!");
+            }
+            else
+            {
+                if (MessageBox.Show(
+                        $"Number of distinct lines: {localDifferenceRows.Count()}\n" +
+                        $"Do you want to see the difference ?\n" +
+                        $"\"Yes\" - Open a window with differences\n" +
+                        $"\"No\" - Continue without opening the window with differences",
+                        "Question",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    DifferenceWindow differenceWindow = new DifferenceWindow(localDifferenceRows, loadedDifferenceRows) { Owner = this };
+                    differenceWindow.ShowDialog();
+                }
             }
 
-            if (MessageBox.Show(
-                    $"Do you want to save actual version file?",
-                    "Question",
-                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (localDifferenceRows.Count() > 0)
             {
-                Utils.SaveThreatDataToFile(loadedThreatData, MainDataGrid.Columns.Count(), LOCAL_DATA_FILE_NAME);
-                dataGridComponent.ThreatInfoData = new ObservableCollection<ThreatInfoModel>(loadedThreatData);
-                MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
+                if (MessageBox.Show(
+                        $"Do you want to save actual version file?",
+                        "Question",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        Utils.SaveThreatDataToFile(loadedThreatData, MainDataGrid.Columns.Count(), LOCAL_DATA_FILE_NAME);
+                        dataGridComponent.ThreatInfoData = new ObservableCollection<ThreatInfoModel>(loadedThreatData);
+                        MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
+                    }
+                    catch (Exception exc)
+                    {
+                        MessageBox.Show("Failed to save the file!\n" +
+                            $"Cause: {exc.Message}");
+                    }
+                }
             }
         }
     }

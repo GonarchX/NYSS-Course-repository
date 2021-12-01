@@ -87,7 +87,7 @@ namespace Automatic_data_parser.Model
             _Excel.Application excel = new _Excel.Application();
             _Excel.Workbook workbook = excel.Workbooks.Open(fullPath);
             _Excel.Worksheet worksheet = workbook.Worksheets[1];
-             
+
             // Starting row is 3 because 1 and 2 rows for column names
             int startRow = 3;
 
@@ -104,14 +104,14 @@ namespace Automatic_data_parser.Model
                 arr[i, 7] = dataInDataGrid[i].AccessibilityViolation == true ? "1" : "0";
             }
 
-            _Excel.Range range = worksheet.Range[worksheet.Cells[startRow, 1], worksheet.Cells[dataInDataGrid.Count, numberOfColumns]];
+            _Excel.Range range = worksheet.Range[worksheet.Cells[startRow, 1], worksheet.Cells[dataInDataGrid.Count + startRow - 1, numberOfColumns]];
 
             range.Value = arr;
 
             worksheet.Rows.RowHeight = 15;
             workbook.SaveAs(fullPath, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, _Excel.XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing);
             workbook.Close(true);
-            excel.Quit();            
+            excel.Quit();
         }
 
         public static ExcelQueryFactory GetExcelFromFile(string fileName)
@@ -137,16 +137,19 @@ namespace Automatic_data_parser.Model
             int i = 1;
             foreach (var row in data)
             {
-                try
+                if (Convert.ToString(row[0].Value).Length != 0)
                 {
-                    threatData.Add(ParseInfoFromRow(row));
-                }
-                catch (ArgumentException exc)
-                {
-                    threatData = null;
-                    // Row = i + 2 because 2 rows in Excel table are rows for column names
-                    throw new ArgumentException(exc.Message + $"\nRow: {i + 2}\n" +
-                        $"File name: {excelFile.FileName}");
+                    try
+                    {
+                        threatData.Add(ParseInfoFromRow(row));
+                    }
+                    catch (ArgumentException exc)
+                    {
+                        threatData = null;
+                        // Row = i + 2 because 2 rows in Excel table are rows for column names
+                        throw new ArgumentException(exc.Message + $"\nRow: {i + 2}\n" +
+                            $"File name: {excelFile.FileName}");
+                    }
                 }
                 i++;
             }
@@ -166,7 +169,7 @@ namespace Automatic_data_parser.Model
                 client.DownloadFile(url, fileName);
             }
         }
-        
+
         public static bool IsDifferenceRows(ThreatInfoModel firstRow, ThreatInfoModel secondRow)
         {
             if (firstRow.ThreatID != secondRow.ThreatID) { return true; }
@@ -184,7 +187,7 @@ namespace Automatic_data_parser.Model
         /// <summary>
         /// Returns lists to display the difference between them in a datagrid
         /// </summary>
-        public static void GetDifferenceRows (IList<ThreatInfoModel> firstSourceData, IList<ThreatInfoModel> secondSourceData, out IList<ThreatInfoModel> firstDifferenceData, out IList<ThreatInfoModel> secondDifferenceData)
+        public static void GetDifferenceRows(IList<ThreatInfoModel> firstSourceData, IList<ThreatInfoModel> secondSourceData, out IList<ThreatInfoModel> firstDifferenceData, out IList<ThreatInfoModel> secondDifferenceData)
         {
             var firstSourceDataIDs = firstSourceData.Select(x => x.ThreatID).ToList();
             var secondSourceDataIDs = secondSourceData.Select(x => x.ThreatID).ToList();
