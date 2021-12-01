@@ -8,8 +8,8 @@ namespace Automatic_data_parser.Model
 {
     public class AbbreviatedThreatInfoModel
     {
-        public int ThreatID { get; set; }
-        public string ThreatName { get; set; }
+        public int ThreatID { get; private set; }
+        public string ThreatName { get; private set; }
 
         public AbbreviatedThreatInfoModel(int threatID, string threatName)
         {

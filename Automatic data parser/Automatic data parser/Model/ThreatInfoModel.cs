@@ -8,7 +8,7 @@ namespace Automatic_data_parser
 {
     public class ThreatInfoModel
     {
-        public int ThreatID { get; set; }
+        public int ThreatID { get; private set; }
         public string ThreatName { get; set; }
         public string DescriptionOfTheThreat { get; set; }
         public string TheSourceOfTheThreat { get; set; }
