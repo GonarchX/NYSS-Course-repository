@@ -28,7 +28,7 @@ namespace Automatic_data_parser
     {
         private readonly string URL = "https://bdu.fstec.ru/files/documents/thrlist.xlsx";
         private readonly string LOADED_DATA_FILE_NAME = "DownloadedData.xlsx";
-        private readonly string LOCAL_DATA_FILE_NAME = "Test_EmptyFile.xlsx";
+        private readonly string LOCAL_DATA_FILE_NAME = "LocalData.xlsx";
         private readonly DataGridComponent dataGridComponent;
 
         public MainWindow()
@@ -62,74 +62,20 @@ namespace Automatic_data_parser
 
             if (IsCorrectStart)
             {
-                ObservableCollection<ThreatInfoModel> observableThreatData = null;
                 try
                 {
-                    observableThreatData = new ObservableCollection<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(excelQueryFactory));
+                    ObservableCollection<ThreatInfoModel> observableThreatData = new ObservableCollection<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(excelQueryFactory));
+                    dataGridComponent = DataGridComponent.GetInstance(observableThreatData);
+                    InitializeComponent();
+                    DataContext = dataGridComponent;
+                    MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
                 }
                 catch (ArgumentException exc)
                 {
                     MessageBox.Show(exc.Message);
-                }
-
-                dataGridComponent = DataGridComponent.GetInstance(observableThreatData);
-                InitializeComponent();
-                ChoosedShowMode_CheckBox.IsChecked = true;
-                DataContext = dataGridComponent;
-                MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
-            }
-        }
-
-        private void UpdateData_Button_Click(object sender, RoutedEventArgs e)
-        {
-            /*string path = "TestText.dsadsa";
-            //if (!File.Exists(LOCAL_DATA_FILE_NAME))
-            if (!File.Exists("TestText.dsadsa"))
-            {
-                bool isFileExists = false;
-                do
-                {
-                    if (MessageBox.Show(
-                    $"Excel table was not found, would you like to try update again?\n\n" +
-                    $"Choosing \"yes\" this window will be displayed again if the file is not found\n\n" +
-                    $"Choosing \"no\" A new local file will be created copying the web version ", "Question",
-                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                    {
-                        isFileExists = File.Exists(path);
-                        //EXcel
-                        //WorkBooks
-                    }
-                    else
-                    {
-                        //if no
-                    }
-                } while (true);
-            }
-
-            //while ()
-            //MSG box Во время сохранения информации не был найден локальный файл с эксель таблицей, хотите попробовать сохранить еще раз?
-            // Да - снова сообщение
-            // Нет - Будет создан новый локальный файл, в таком случае вы не увидите разницу между изменениями локального файла и актуальной версией
-
-            //TODOODODODOODDOODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-            //Добавить кейс, когда во время корректной работы программы пользователь переместил локальный эксель куда-нибудь из рабочей директории
-            //if файла нету, то известить об этом пользователя, мол тогда начнется загрузка файла и никаких изменений он не увидит
-
-            try
-            {
-                if (File.Exists(LOCAL_DATA_FILE_NAME))
-                {
-                    Utils.DownloadExcelFromWebsiteToDirectory(URL, LOADED_DATA_FILE_NAME);
-                }
-                else
-                {
-                    Utils.DownloadExcelFromWebsiteToDirectory(URL, LOCAL_DATA_FILE_NAME);
+                    Close();
                 }
             }
-            catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message);
-            }*/
         }
 
         private void FirstPage_Button_Click(object sender, RoutedEventArgs e)
@@ -184,8 +130,11 @@ namespace Automatic_data_parser
 
         private void ChoosedShowMode_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            dataGridComponent.IsAbbreviated = false;
-            MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
+            if (dataGridComponent != null)
+            {
+                dataGridComponent.IsAbbreviated = false;
+                MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
+            }
         }
 
         private void ChoosedShowMode_CheckBox_Unchecked(object sender, RoutedEventArgs e)
@@ -196,7 +145,49 @@ namespace Automatic_data_parser
 
         private void SaveData_Button_Click(object sender, RoutedEventArgs e)
         {
-            Utils.SaveDataGridDataToFile(dataGridComponent.ThreatInfoData, LOCAL_DATA_FILE_NAME);
+            Utils.SaveThreatDataToFile(dataGridComponent.ThreatInfoData, MainDataGrid.Columns.Count(), LOCAL_DATA_FILE_NAME);
+        }
+
+        private void SyncData_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Utils.DownloadExcelFromWebsiteToDirectory(URL, LOADED_DATA_FILE_NAME);
+
+            List<ThreatInfoModel> localThreatData;
+            List<ThreatInfoModel> loadedThreatData;
+            try
+            {
+                loadedThreatData = new List<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(Utils.GetExcelFromFile(LOADED_DATA_FILE_NAME)));
+                localThreatData = new List<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(Utils.GetExcelFromFile(LOCAL_DATA_FILE_NAME)));
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+                return;
+            }
+
+            Utils.GetDifferenceRows(localThreatData, loadedThreatData, out IList<ThreatInfoModel> localDifferenceRows, out IList<ThreatInfoModel> loadedDifferenceRows);
+
+            if (MessageBox.Show(
+                    $"Number of distinct lines: {localDifferenceRows.Count()}\n" +
+                    $"Do you want to see the difference ?\n" +
+                    $"\"Yes\" - Open a window with differences\n" +
+                    $"\"No\" - Continue without opening the window with differences",
+                    "Question",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                DifferenceWindow differenceWindow = new DifferenceWindow(localDifferenceRows, loadedDifferenceRows) { Owner = this };
+                differenceWindow.ShowDialog();
+            }
+
+            if (MessageBox.Show(
+                    $"Do you want to save actual version file?",
+                    "Question",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                Utils.SaveThreatDataToFile(loadedThreatData, MainDataGrid.Columns.Count(), LOCAL_DATA_FILE_NAME);
+                dataGridComponent.ThreatInfoData = new ObservableCollection<ThreatInfoModel>(loadedThreatData);
+                MainDataGrid.ItemsSource = dataGridComponent.PositionsOnCurrentPage();
+            }
         }
     }
 }

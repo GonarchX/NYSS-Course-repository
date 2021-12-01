@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Automatic_data_parser"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="918">
+        Title="MainWindow" Height="450" Width="1012.377">
     <Grid Margin="0,0,2,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="685*"/>
             <ColumnDefinition Width="223*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid Name ="MainDataGrid" ColumnWidth="100" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" Margin="10"/>
+        <DataGrid Name ="MainDataGrid" ColumnWidth="100" Grid.Column="0" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto" Margin="10"/>
 
-        <Grid Grid.Column="1" Height="400" VerticalAlignment="Center" Margin="0,10">
+        <Grid Grid.Column="1" Height="400" VerticalAlignment="Center" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -35,9 +35,9 @@
                 <Button Name ="NextPage_Button" Content="&gt;" Width = "25" Margin = "0, 10" ToolTip="Next page" Click="NextPage_Button_Click"/>
                 <Button Name ="LastPage_Button" Content="&gt;&gt;" Width = "25" Margin = "5, 10" ToolTip="Last page" Click="LastPage_Button_Click"/>
             </StackPanel>
-            <Button x:Name ="SyncData_Button" Content="Sync data" Margin="10,10,0,0" Click="UpdateData_Button_Click" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="203" RenderTransformOrigin="0.64,0.76" FontSize="24" Grid.Row="4"/>
-            <CheckBox Name ="ChoosedShowMode_CheckBox" Content="Show full info mode" HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" FontSize="16" Height="23" Width="178" Grid.Row="1" Checked="ChoosedShowMode_CheckBox_Checked" Unchecked="ChoosedShowMode_CheckBox_Unchecked" />
-            <Button x:Name ="SaveData_Button" Content="Save data" Margin="10,10,0,0" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="203" RenderTransformOrigin="0.64,0.76" FontSize="24" Grid.Row="3" Click="SaveData_Button_Click"/>
+            <Button x:Name ="SyncData_Button" Content="Sync data" Margin="10,10,0,0" Click="SyncData_Button_Click" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="203" RenderTransformOrigin="0.64,0.76" FontSize="24" Grid.Row="4"/>
+            <CheckBox Name ="ChoosedShowMode_CheckBox" Content="Show full info mode" IsChecked="True" HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" FontSize="16" Height="23" Width="178" Grid.Row="1" Checked="ChoosedShowMode_CheckBox_Checked" Unchecked="ChoosedShowMode_CheckBox_Unchecked" />
+            <Button x:Name ="SaveData_Button" Content="Save data" Margin="10,10,0,0" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="203" RenderTransformOrigin="0.64,0.76" FontSize="24" Grid.Row="3" Click="SaveData_Button_Click"/>            
         </Grid>
     </Grid>
 </Window>
