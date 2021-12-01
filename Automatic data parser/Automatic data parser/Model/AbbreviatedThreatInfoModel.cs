@@ -15,6 +15,6 @@ namespace Automatic_data_parser.Model
         {
             ThreatID = threatID;
             ThreatName = threatName;
-        } 
+        }
     }
 }

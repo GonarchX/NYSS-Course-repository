@@ -204,7 +204,6 @@ namespace Automatic_data_parser.Model
             }
         }
 
-        
         /// <returns>Positions on current page in datagrid</returns>
         public ObservableCollection<ThreatInfoModel> PositionsOnCurrentPage()
         {

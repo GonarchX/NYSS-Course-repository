@@ -26,7 +26,6 @@ namespace Automatic_data_parser
                           bool integrityViolation,
                           bool accessibilityViolation)
         {
-            
             ThreatID = threatID;
             ThreatName = threatName;
             DescriptionOfTheThreat = descriptionOfTheThreat;

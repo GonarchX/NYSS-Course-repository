@@ -166,7 +166,7 @@ namespace Automatic_data_parser.Model
                 client.DownloadFile(url, fileName);
             }
         }
-
+        
         public static bool IsDifferenceRows(ThreatInfoModel firstRow, ThreatInfoModel secondRow)
         {
             if (firstRow.ThreatID != secondRow.ThreatID) { return true; }
@@ -181,6 +181,9 @@ namespace Automatic_data_parser.Model
             return false;
         }
 
+        /// <summary>
+        /// Returns lists to display the difference between them in a datagrid
+        /// </summary>
         public static void GetDifferenceRows (IList<ThreatInfoModel> firstSourceData, IList<ThreatInfoModel> secondSourceData, out IList<ThreatInfoModel> firstDifferenceData, out IList<ThreatInfoModel> secondDifferenceData)
         {
             var firstSourceDataIDs = firstSourceData.Select(x => x.ThreatID).ToList();
