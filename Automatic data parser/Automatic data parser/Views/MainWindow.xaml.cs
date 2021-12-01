@@ -150,12 +150,11 @@ namespace Automatic_data_parser
 
         private void SyncData_Button_Click(object sender, RoutedEventArgs e)
         {
-            Utils.DownloadExcelFromWebsiteToDirectory(URL, LOADED_DATA_FILE_NAME);
-
             List<ThreatInfoModel> localThreatData;
             List<ThreatInfoModel> loadedThreatData;
             try
             {
+                Utils.DownloadExcelFromWebsiteToDirectory(URL, LOADED_DATA_FILE_NAME);
                 loadedThreatData = new List<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(Utils.GetExcelFromFile(LOADED_DATA_FILE_NAME)));
                 localThreatData = new List<ThreatInfoModel>(Utils.ParseExcelToThreatInfo(Utils.GetExcelFromFile(LOCAL_DATA_FILE_NAME)));
             }
