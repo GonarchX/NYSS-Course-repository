@@ -1,0 +1,15 @@
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\bin\Debug\Course Work.exe.config
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\bin\Debug\Course Work.exe
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\bin\Debug\Course Work.pdb
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Course Work.csproj.AssemblyReference.cache
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Views\MainWindow.g.cs
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\App.g.cs
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Course Work_MarkupCompile.cache
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Course Work_MarkupCompile.lref
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Views\MainWindow.baml
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Course Work.g.resources
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Course_Work.Properties.Resources.resources
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Course Work.csproj.GenerateResource.cache
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Course Work.csproj.CoreCompileInputs.cache
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Course Work.exe
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work\obj\Debug\Course Work.pdb

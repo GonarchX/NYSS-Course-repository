@@ -24,5 +24,10 @@ namespace Course_Work
         {
             InitializeComponent();
         }
+
+        private void Enc_Open_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
