@@ -30,8 +30,10 @@ namespace Course_Work
         #region Work with files in windows
         private string ReadDataFromAvailableFiles()
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "All available files|*.docx;*.txt|Word files (*.docx)|*.docx|Text files (*.txt)|*.txt";
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Filter = "All available files|*.docx;*.txt|Word files (*.docx)|*.docx|Text files (*.txt)|*.txt"
+            };
             fileDialog.ShowDialog();
             string filePath = fileDialog.FileName.ToString();
 
@@ -54,8 +56,10 @@ namespace Course_Work
 
         private void SaveDataToAvailableFiles(string inputData)
         {
-            SaveFileDialog fileDialog = new SaveFileDialog();
-            fileDialog.Filter = "Word files (*.docx)|*.docx|Text files (*.txt)|*.txt";
+            SaveFileDialog fileDialog = new SaveFileDialog
+            {
+                Filter = "Word files (*.docx)|*.docx|Text files (*.txt)|*.txt"
+            };
             fileDialog.ShowDialog();
             string filePath = fileDialog.FileName.ToString();
 
