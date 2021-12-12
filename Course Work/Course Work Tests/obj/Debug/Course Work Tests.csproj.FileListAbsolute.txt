@@ -1,0 +1,17 @@
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Course Work Tests.dll
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Course Work Tests.pdb
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Course Work.exe
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Course Work.pdb
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Course Work.exe.config
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\obj\Debug\Course Work Tests.csproj.AssemblyReference.cache
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\obj\Debug\Course Work Tests.csproj.CoreCompileInputs.cache
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\obj\Debug\Course Work Tests.csproj.CopyComplete
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\obj\Debug\Course Work Tests.dll
+C:\Users\valen\source\repos\NYSS-Course-repository\Course Work\Course Work Tests\obj\Debug\Course Work Tests.pdb
