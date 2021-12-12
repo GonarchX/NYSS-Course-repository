@@ -27,6 +27,7 @@ namespace Course_Work
             InitializeComponent();
         }
 
+        #region Work with files in windows
         private string ReadDataFromAvailableFiles()
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
@@ -64,7 +65,8 @@ namespace Course_Work
                 wordInteract.SaveToFile(filePath, inputData);
             }
         }
-
+        #endregion
+       
         #region Encoding buttons
         private void Enc_Open_Button_Click(object sender, RoutedEventArgs e)
         {
