@@ -6,11 +6,20 @@ using System.Threading.Tasks;
 
 namespace Course_Work.Utils
 {
-    public class VigenereCipher
+    /// <summary>
+    /// Provides the ability to encrypt / decrypt text using the Vigenere cipher
+    /// </summary>
+    public static class VigenereCipher
     {
-        private static string lowCaseAlphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
-        private static string upCaseAlphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        private static readonly string lowCaseAlphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+        private static readonly string upCaseAlphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
 
+        /// <summary>
+        /// Encrypts the received text with the Vigenere cipher 
+        /// </summary>
+        /// <param name="text">Text to encrypt</param>
+        /// <param name="step">Alphabetical shift amount</param>
+        /// <returns>Encrypted text</returns>
         public static string EncryptText(string text, string codeWord)
         {
             if (text == null)
@@ -50,6 +59,12 @@ namespace Course_Work.Utils
             return new string(resultText);
         }
 
+        /// <summary>
+        /// Decrypts the received text with the Vigenere cipher 
+        /// </summary>
+        /// <param name="text">Text to decrypt</param>
+        /// <param name="step">Alphabetical shift amount</param>
+        /// <returns>Decrypted text</returns>
         public static string DecryptText(string text, string codeWord)
         {
             if (text == null)
