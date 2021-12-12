@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,18 +27,50 @@ namespace Course_Work
             InitializeComponent();
         }
 
+        private string ReadDataFromAvailableFiles()
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "All available files|*.docx;*.txt|Word files (*.docx)|*.docx|Text files (*.txt)|*.txt";
+            fileDialog.ShowDialog();
+            string filePath = fileDialog.FileName.ToString();
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                switch (filePath.Substring(filePath.LastIndexOf('.')))
+                {
+                    case ".txt":
+                        return File.ReadAllText(filePath);
+                    case ".docx":
+                        Utils.WordInteractImpl wordInteract = new Utils.WordInteractImpl();
+                        return wordInteract.LoadFromFile(filePath);
+                    default:
+                        MessageBox.Show("Incorrect file extension type specified!");
+                        break;
+                }
+            }
+            return "";
+        }
+
+        private void SaveDataToAvailableFiles(string inputData)
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Filter = "Word files (*.docx)|*.docx|Text files (*.txt)|*.txt";
+            fileDialog.ShowDialog();
+            string filePath = fileDialog.FileName.ToString();
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                Utils.WordInteractImpl wordInteract = new Utils.WordInteractImpl();
+                wordInteract.SaveToFile(filePath, inputData);
+            }
+        }
+
         #region Encoding buttons
         private void Enc_Open_Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                OpenFileDialog fileDialog = new OpenFileDialog();
-                fileDialog.Filter = "Word files (*.docx)|*.docx";
-                fileDialog.ShowDialog();
-                string filePath = fileDialog.FileName.ToString();
-
-                Utils.WordInteractImpl wordInteract = new Utils.WordInteractImpl();
-                EncryptedText.Text = wordInteract.LoadFromFile(filePath);
+                EncryptedText.Text = ReadDataFromAvailableFiles();
             }
             catch (Exception exc)
             {
@@ -49,13 +82,7 @@ namespace Course_Work
         {
             try
             {
-                SaveFileDialog fileDialog = new SaveFileDialog();
-                fileDialog.Filter = "Word files (*.docx)|*.docx";
-                fileDialog.ShowDialog();
-                string filePath = fileDialog.FileName.ToString();
-
-                Utils.WordInteractImpl wordInteract = new Utils.WordInteractImpl();
-                wordInteract.SaveToFile(filePath, EncryptedText.Text);
+                SaveDataToAvailableFiles(EncryptedText.Text);
             }
             catch (Exception exc)
             {
@@ -75,13 +102,7 @@ namespace Course_Work
         {
             try
             {
-                OpenFileDialog fileDialog = new OpenFileDialog();
-                fileDialog.Filter = "Word files (*.docx)|*.docx";
-                fileDialog.ShowDialog();
-                string filePath = fileDialog.FileName.ToString();
-
-                Utils.WordInteractImpl wordInteract = new Utils.WordInteractImpl();
-                DecryptedText.Text = wordInteract.LoadFromFile(filePath);
+                DecryptedText.Text = ReadDataFromAvailableFiles();
             }
             catch (Exception exc)
             {
@@ -93,13 +114,7 @@ namespace Course_Work
         {
             try
             {
-                SaveFileDialog fileDialog = new SaveFileDialog();
-                fileDialog.Filter = "Word files (*.docx)|*.docx";
-                fileDialog.ShowDialog();
-                string filePath = fileDialog.FileName.ToString();
-
-                Utils.WordInteractImpl wordInteract = new Utils.WordInteractImpl();
-                wordInteract.SaveToFile(filePath, DecryptedText.Text);
+                SaveDataToAvailableFiles(DecryptedText.Text);
             }
             catch (Exception exc)
             {
